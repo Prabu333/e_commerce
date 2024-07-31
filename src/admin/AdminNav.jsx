@@ -36,7 +36,7 @@ const AdminNav = () => {
 const profileActionRef = useRef(null);
 
 
-const { currentUser, photoURL } = useAuth();
+const { photoURL } = useAuth();
 const navigate = useNavigate();
 
 const toggleProfileActions = () => {
