@@ -1,27 +1,26 @@
-import  { useEffect } from 'react'
-import {db} from '../firebase.config'
-import { collection, onSnapshot } from 'firebase/firestore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react';
+import { db } from '../firebase.config';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 const useGetData = (collectionName) => {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const [data, setData] = useState([])
-    const collectionRef = collection(db,collectionName)
-    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        // Define the collection reference inside the effect to avoid stale references
+        const collectionRef = collection(db, collectionName);
 
-    useEffect(()=>{
-        const getData = async() =>{
-             await onSnapshot(collectionRef,(snapshot)=>{
+        // Create the snapshot listener
+        const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+            setData(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+            setLoading(false);
+        });
 
-                setData(snapshot.docs.map(doc=>({...doc.data(),id: doc.id})))
-                setLoading(false)
-             })
-            
-        }
-        getData()
+        // Cleanup function to unsubscribe from the listener
+        return () => unsubscribe();
+    }, [collectionName]); // Include collectionName in the dependency array
 
-    },[])
-  return {data,loading}
-}
+    return { data, loading };
+};
 
-export default useGetData
+export default useGetData;
