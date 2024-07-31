@@ -20,9 +20,9 @@ const useAuth = () => {
 
         if (userDoc.exists()) {
           setUserRole(userDoc.data().userRole);
-          setPhotoURL(userDoc.data().photoURL)
-          console.log("Role")
-          console.log(userRole)
+          setPhotoURL(userDoc.data().photoURL);
+          // Logging should be placed in a separate effect if needed
+          // console.log("Role", userDoc.data().userRole);
         } else {
           console.log('No such document!');
           setUserRole(null);
@@ -30,13 +30,20 @@ const useAuth = () => {
       } else {
         setCurrentUser(null);
         setUserRole(null);
-        setPhotoURL(null)
+        setPhotoURL(null);
       }
     });
 
     // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, []);
+  }, []); // Empty dependency array means this effect runs once on mount and once on unmount
+
+  // Optionally, you can use another effect to log or act upon changes in userRole
+  useEffect(() => {
+    if (userRole !== null) {
+      console.log("Role", userRole);
+    }
+  }, [userRole]); // This effect will run whenever userRole changes
 
   return { currentUser, userRole, photoURL };
 };
