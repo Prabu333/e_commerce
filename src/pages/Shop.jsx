@@ -102,18 +102,30 @@ const Shop = () => {
           </Row>
         </Container>
       </section>
-      <section className='pt-0'>
-        <Container>
-          <Row>
-            {
-              productsData.length === 0 ? <h1 className="no__data">No products are found!</h1> :
-              <ProductsList data={productsData} />
-            }
-          </Row>
-        </Container>
-      </section>
+
+      {loading ? (
+        <section className='pt-0'>
+          <Container>
+            <Row>
+              <Col lg='12'>
+                <div className="loading__indicator">Loading...</div>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+      ) : (
+        <section className='pt-0'>
+          <Container>
+            <Row>
+              {productsData.length === 0 ? <h1 className="no__data">No products are found!</h1> :
+                <ProductsList data={productsData} />
+              }
+            </Row>
+          </Container>
+        </section>
+      )}
     </Helmet>
   );
-}
+};
 
 export default Shop;
